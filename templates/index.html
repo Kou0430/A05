@@ -48,8 +48,8 @@
           >
         </div>
         <ul class="hidden sm:inline-flex menu menu-horizontal px-1">
-          <li><a>材料からレシピ検索</a></li>
-          <li><a>レシピから買い物リスト</a></li>
+          <li><a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a></li>
+          <li><a href="{{ url_for('recipe_food') }}">レシピから買い物リスト</a></li>
         </ul>
 
         <div class="flex-none">
@@ -94,7 +94,7 @@
                 place-items-center
               "
             >
-              <a href="./food-recipe.html">材料からレシピ検索</a>
+              <a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a>
             </div>
             <div class="divider divider-horizontal">OR</div>
             <div
@@ -108,7 +108,7 @@
                 place-items-center
               "
             >
-              <a href="./recipe-food.html">レシピから買い物リスト</a>
+              <a href="{{ url_for('recipe_food') }}">レシピから買い物リスト</a>
             </div>
           </div>
           <div class="divider"></div>
@@ -121,8 +121,8 @@
           <label for="my-drawer-2" class="drawer-overlay"></label>
           <ul class="pt-24 menu p-4 w-80 bg-base-100 text-base-content">
             <!-- Sidebar content here -->
-            <li><a>材料からレシピ検索</a></li>
-            <li><a>レシピから買い物リスト</a></li>
+            <li><a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a></li>
+            <li><a href="{{ url_for('recipe_food') }}">レシピから買い物リスト</a></li>
             <li><a>ブックマーク</a></li>
             <li><a>ログアウト</a></li>
           </ul>
