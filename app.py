@@ -33,30 +33,39 @@ def food_search():
         offset = 0
 
         if request.args.get("p",""):
-            page = request.args.get("p","")
+            page = int(request.args.get("p",""))
             offset = (int(page) - 1) * 10
-
-        # Debug
-        app.logger.debug(recipeTitle)
-
 
         recipeAmount = cur.execute("SELECT COUNT(id) FROM recipe WHERE recipe_title LIKE ? ORDER BY id ASC", ('%'+recipeTitle+'%',))
 
         result = []
 
         pageAmount = math.ceil(int(recipeAmount.fetchall()[0][0]) / 10)
-        # Debug
-        app.logger.debug(pageAmount)
+
+        # ページネーション
+        pageList = []
+        pageList.append(1)
+        pagecount = 0
+        if pageAmount <= page + 3:
+            pagecount = pageAmount - 1
+        elif page == 1:
+            pagecount = page + 4
+        elif page == 2:
+            pagecount = page + 3
+        else:
+            pagecount = page + 2
+        for i in range(4):
+            if pagecount <= 1:
+                break
+            pageList.insert(1, pagecount)
+            pagecount -= 1
+        if pageAmount > 0:
+            pageList.append(pageAmount)
+        # END ページネーション
 
         recipeLists = cur.execute("SELECT id, recipe_title, recipe_url, food_image_url, recipe_material FROM recipe WHERE recipe_title LIKE ? ORDER BY id ASC LIMIT 10 OFFSET ?", ('%'+recipeTitle+'%', offset))
-        # Debug
-        app.logger.debug(recipeLists)
 
         for recipeList in recipeLists.fetchall():
-            # Debug
-            # app.logger.debug(int(recipeList["id"]))
-            # app.logger.debug(recipeList[0])
-
             recipeId = int(recipeList[0])
             recipe_title = recipeList[1]
             recipe_url = recipeList[2]
@@ -70,10 +79,7 @@ def food_search():
             dict["recipe_material"] = recipe_material
             result.append(dict)
 
-        # Debug
-        # app.logger.debug(result)
-
         # セッションを閉じる
         conn.close()
 
-        return render_template("food-search.html", result=result, recipeTitle=recipeTitle, pageAmount=pageAmount)
+        return render_template("food-search.html", result=result, recipeTitle=recipeTitle, page=page, pageList=pageList, pageAmount=pageAmount)

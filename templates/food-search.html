@@ -106,12 +106,9 @@
 
           <div class="flex justify-center mt-4">
             <div class="btn-group">
-              <a href="./food-search?q={{ recipeTitle }}&p=1" class="btn btn-active">1</a>
-              <a href="./food-search?q={{ recipeTitle }}&p=2" class="btn">2</a>
-              <a href="./food-search?q={{ recipeTitle }}&p=3" class="btn">3</a>
-              <a href="./food-search?q={{ recipeTitle }}&p=4" class="btn">4</a>
-              <p class="btn">…</p>
-              <a href="./food-search?q={{ recipeTitle }}&p={{ pageAmount }}" class="btn">{{ pageAmount }}</a>
+              {% for p in pageList %}
+                <a href="./food-search?q={{ recipeTitle }}&p={{ p }}" class="btn{% if p == page %} btn-active{% endif %}">{{ p }}</a>
+              {% endfor %}
             </div>
           </div>
         </div>
