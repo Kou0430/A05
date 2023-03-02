@@ -1,169 +1,85 @@
-<!DOCTYPE html>
-<html lang="ja" data-theme="cupcake">
-  <head>
-    <title>Home</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@2.51.0/dist/full.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
-    <!-- 共通部分（ナビゲーションバー） ここから -->
-    <div class="lg:w-9/12 lg:m-auto">
-      <div class="lg:w-9/12 navbar bg-base-100 fixed z-50">
-        <div class="flex-none">
-          <label
-            for="my-drawer-2"
-            class="
-              swap-off
-              fill-current
-              btn btn-square btn-ghost
-              drawer-button
-              lg:hidden
-              swap swap-rotate
-            "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              class="swap-off inline-block w-5 h-5 stroke-current"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              ></path>
-            </svg>
-          </label>
-        </div>
-        <div class="flex-1">
-          <a href="/" class="btn btn-ghost normal-case text-xl"
-            >Madam Kitchen</a
-          >
-        </div>
-        <ul class="hidden sm:inline-flex menu menu-horizontal px-1">
-          <li><a>材料からレシピ検索</a></li>
-          <li><a>レシピから買い物リスト</a></li>
-        </ul>
+{% extends "base.html" %}
 
-        <div class="flex-none">
-          <button class="btn btn-square btn-ghost">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              class="inline-block w-5 h-5 stroke-current"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-              ></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-      <!-- 共通部分（ナビゲーションバー） ここまで -->
-      <div class="drawer drawer-mobile">
-        <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content mt-16 p-5">
-          <!-- Page content here -->
+{% block content %}
+<!-- Page content here -->
 
-          <div class="text-sm breadcrumbs mb-2">
-            <ul>
-              <li><a href="/">ホーム</a></li>
-              <li>材料からレシピ検索</li>
-            </ul>
-          </div>
+<div class="text-sm breadcrumbs mb-2">
+  <ul>
+    <li><a href="/">ホーム</a></li>
+    <li>材料からレシピ検索</li>
+  </ul>
+</div>
 
-          <div class="flex justify-center">
-            <div class="form-control">
-              <label class="label">
-                <span class="label-text">使いたい食材を入力</span>
-              </label>
-              <label class="input-group m-1">
-                <span>食材1</span>
-                <input
-                  type="text"
-                  placeholder="食材1"
-                  class="input input-bordered"
-                />
-              </label>
-              <label class="input-group m-1">
-                <span>食材2</span>
-                <input
-                  type="text"
-                  placeholder="食材2"
-                  class="input input-bordered"
-                />
-              </label>
-              <label class="input-group m-1">
-                <span>食材3</span>
-                <input
-                  type="text"
-                  placeholder="食材3"
-                  class="input input-bordered"
-                />
-              </label>
-              <label class="input-group m-1">
-                <span>食材4</span>
-                <input
-                  type="text"
-                  placeholder="食材4"
-                  class="input input-bordered"
-                />
-              </label>
-              <label class="input-group m-1">
-                <span>食材5</span>
-                <input
-                  type="text"
-                  placeholder="食材5"
-                  class="input input-bordered"
-                />
-              </label>
-              <button class="btn m-1 flex content-center">
-                <span class="text-lg pr-1">検索</span>
+<div class="flex justify-center">
+  <form method="POST">
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text">使いたい食材を入力</span>
+      </label>
+      <label class="input-group m-1">
+        <span>食材1</span>
+        <input
+            type="text"
+            placeholder="食材1"
+            class="input input-bordered"
+            name="material1"
+        />
+      </label>
+      <label class="input-group m-1">
+        <span>食材2</span>
+        <input
+            type="text"
+            placeholder="食材2"
+            class="input input-bordered"
+            name="material2"
+        />
+      </label>
+      <label class="input-group m-1">
+        <span>食材3</span>
+        <input
+            type="text"
+            placeholder="食材3"
+            class="input input-bordered"
+            name="material3"
+        />
+      </label>
+      <label class="input-group m-1">
+        <span>食材4</span>
+        <input
+            type="text"
+            placeholder="食材4"
+            class="input input-bordered"
+            name="material4"
+        />
+      </label>
+      <label class="input-group m-1">
+        <span>食材5</span>
+        <input
+            type="text"
+            placeholder="食材5"
+            class="input input-bordered"
+            name="material5"
+        />
+      </label>
+      <button class="btn m-1 flex content-center" type="submit">
+        <span class="text-lg pr-1">検索</span>
 
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- Page content END -->
-        </div>
-        <!-- 共通部分（ナビゲーションバー） ここから -->
-        <div class="drawer-side">
-          <label for="my-drawer-2" class="drawer-overlay"></label>
-          <ul class="pt-24 menu p-4 w-80 bg-base-100 text-base-content">
-            <!-- Sidebar content here -->
-            <li><a>材料からレシピ検索</a></li>
-            <li><a>レシピから買い物リスト</a></li>
-            <li><a>ブックマーク</a></li>
-            <li><a>ログアウト</a></li>
-          </ul>
-        </div>
-        <!-- 共通部分（ナビゲーションバー） ここまで -->
-      </div>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+        >
+            <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+        </svg>
+      </button>
     </div>
-  </body>
-</html>
+  </form>
+</div>
+{% endblock %}
