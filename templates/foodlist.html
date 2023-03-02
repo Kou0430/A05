@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Page content here -->
+
+<div class="text-sm breadcrumbs mb-2">
+<ul>
+    <li><a>ホーム</a></li>
+    <li><a>レシピから買い物リスト</a></li>
+    <li>検索結果</li>
+</ul>
+</div>
+
+<div class="overflow-x-auto w-full">
+<table class="table w-full">
+    <!-- head -->
+    <thead>
+    <tr>
+        <th>
+        <label>
+            <input type="checkbox" class="checkbox" />
+        </label>
+        </th>
+        <th>食材名</th>
+        <th>個数・量</th>
+        <th>食材詳細</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- row 1 -->
+    <tr>
+        <th>
+        <label>
+            <input type="checkbox" class="checkbox" />
+        </label>
+        </th>
+        <td>
+        <div class="flex items-center space-x-3">
+            <div>
+            <div class="font-bold">バナナ</div>
+            <div class="text-sm opacity-50">United States</div>
+            </div>
+        </div>
+        </td>
+        <td>1個</td>
+        <th>
+        <button class="btn btn-ghost btn-xs">詳細</button>
+        </th>
+    </tr>
+    <!-- row 2 -->
+    <tr>
+        <th>
+        <label>
+            <input type="checkbox" class="checkbox" />
+        </label>
+        </th>
+        <td>
+        <div class="flex items-center space-x-3">
+            <div>
+            <div class="font-bold">リンゴ</div>
+            <div class="text-sm opacity-50">China</div>
+            </div>
+        </div>
+        </td>
+        <td>1個</td>
+        <th>
+        <button class="btn btn-ghost btn-xs">詳細</button>
+        </th>
+    </tr>
+    <!-- row 3 -->
+    <tr>
+        <th>
+        <label>
+            <input type="checkbox" class="checkbox" />
+        </label>
+        </th>
+        <td>
+        <div class="flex items-center space-x-3">
+            <div>
+            <div class="font-bold">ブドウ</div>
+            <div class="text-sm opacity-50">Russia</div>
+            </div>
+        </div>
+        </td>
+        <td>1個</td>
+        <th>
+        <button class="btn btn-ghost btn-xs">詳細</button>
+        </th>
+    </tr>
+    <!-- row 4 -->
+    <tr>
+        <th>
+        <label>
+            <input type="checkbox" class="checkbox" />
+        </label>
+        </th>
+        <td>
+        <div class="flex items-center space-x-3">
+            <div>
+            <div class="font-bold">スイカ</div>
+            <div class="text-sm opacity-50">Brazil</div>
+            </div>
+        </div>
+        </td>
+        <td>1個</td>
+        <th>
+        <button class="btn btn-ghost btn-xs">詳細</button>
+        </th>
+    </tr>
+    </tbody>
+    <!-- foot -->
+    <tfoot>
+    <tr>
+        <th></th>
+        <th>食材名</th>
+        <th>個数・量</th>
+        <th>食材詳細</th>
+        <th></th>
+    </tr>
+    </tfoot>
+</table>
+</div>
+
+{% endblock %}
