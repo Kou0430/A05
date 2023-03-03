@@ -1,41 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
+
   <div class="text-sm breadcrumbs">
     <ul>
-        <li><a href="/">ホーム</a></li>
-        <li><a>材料からレシピ検索</a></li>
-        <li>検索結果</li>
+      <li><a href="/">ホーム</a></li>
+      <li><a href="./food-recipe">材料からレシピ検索</a></li>
+      <li>検索結果</li>
     </ul>
   </div>
 
+  <p class="mt-4">{{ recipeAmount }} 件の検索結果</p>
+  <p class="mb-2">{{ page }} ページ目</p>
+
   <div class="flex flex-wrap">
-    {% for recipe in recipes %}
+    {% for r in result %}
     <div class="card card-compact w-48 bg-base-100 shadow-xl m-2">
-      <figure>
+      <figure class="h-36">
         <img
-          src="{{ recipe.food_image_url }}"
-          alt="Shoes"
-          style="height: 150px; width: 100%;"
+          class="object-contain"
+          src="{{ r.foodImageUrl }}"
         />
       </figure>
       <div class="card-body">
-        <h2 class="card-title">{{ recipe.recipe_title }}</h2>
+        <h2 class="card-title">{{ r.recipeTitle }}</h2>
+        {% for rm in r.recipeMaterial %}
+          {{ rm }} <br>
+        {% endfor %}
         <div class="card-actions justify-end">
-          <button class="btn btn-primary"><a href="{{ recipe.recipe_url }}">買い物リストへ</a></button>
+          <a class="btn btn-primary" href="/foodlist?id={{ r.recipeId }}">材料リストへ</a>
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
 
-
   <div class="flex justify-center mt-4">
     <div class="btn-group">
-      <button class="btn btn-active">1</button>
-      <button class="btn">2</button>
-      <button class="btn">3</button>
-      <button class="btn">4</button>
+      {% for p in pageList %}
+        <a href="./food-search?q={{ searchTitle }}&p={{ p }}" class="btn{% if p == page %} btn-active{% endif %}">{{ p }}</a>
+      {% endfor %}
     </div>
   </div>
+
 {% endblock %}
