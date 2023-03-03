@@ -62,7 +62,6 @@ def food_search():
             pagecount -= 1
         if pageAmount > 0:
             pageList.append(pageAmount)
-        # END ページング
 
         # 検索結果を入れる配列
         result = []
@@ -115,28 +114,35 @@ def foodlist():
         # 該当レシピを検索
         recipeDetailByRecipeId = cur.execute("SELECT id, recipe_title, recipe_url, food_image_url, recipe_material FROM recipe WHERE id = ?", (recipeId,))
 
-        # TODO: 結果が存在しなかった場合の例外処理
-        recipeDetail = recipeDetailByRecipeId.fetchall()[0]
+        # 結果を入れる変数
+        result = {}
 
-        # 結果を加工・resultに詰める
-        recipeId = int(recipeDetail[0])
-        recipeTitle = recipeDetail[1]
-        recipeUrl = recipeDetail[2]
-        foodImageUrl = recipeDetail[3]
-        recipeMaterial = recipeDetail[4]
+        recipeDetailFetchall = recipeDetailByRecipeId.fetchall()
+        if len(recipeDetail):
+            recipeDetail = recipeDetailFetchall[0]
 
-        recipeMaterial = recipeMaterial.replace('[', '')
-        recipeMaterial = recipeMaterial.replace(']', '')
-        recipeMaterial = recipeMaterial.replace('\'', '')
-        recipeMaterial = recipeMaterial.split(",")
+            # 結果を加工・resultに詰める
+            recipeId = int(recipeDetail[0])
+            recipeTitle = recipeDetail[1]
+            recipeUrl = recipeDetail[2]
+            foodImageUrl = recipeDetail[3]
+            recipeMaterial = recipeDetail[4]
 
-        dict = {}
-        dict["recipeId"] = recipeId
-        dict["recipeTitle"] = recipeTitle
-        dict["recipeUrl"] = recipeUrl
-        dict["foodImageUrl"] = foodImageUrl
-        dict["recipeMaterial"] = recipeMaterial
-        result = dict
+            recipeMaterial = recipeMaterial.replace('[', '')
+            recipeMaterial = recipeMaterial.replace(']', '')
+            recipeMaterial = recipeMaterial.replace('\'', '')
+            recipeMaterial = recipeMaterial.split(",")
+
+            dict = {}
+            dict["recipeId"] = recipeId
+            dict["recipeTitle"] = recipeTitle
+            dict["recipeUrl"] = recipeUrl
+            dict["foodImageUrl"] = foodImageUrl
+            dict["recipeMaterial"] = recipeMaterial
+            result = dict
+        else:
+            # レシピIDが存在しなかった場合、検索画面にリダイレクト
+            return redirect("/recipe-food")
 
         # コネクションを閉じる
         conn.close()
