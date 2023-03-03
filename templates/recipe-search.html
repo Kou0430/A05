@@ -75,6 +75,7 @@
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content mt-16 p-5">
           <!-- Page content here -->
+        <form action="/recipe-search" method="post">
           <div class="text-sm breadcrumbs">
             <ul>
               <li><a href="/">ホーム</a></li>
@@ -82,130 +83,36 @@
               <li>検索結果</li>
             </ul>
           </div>
-
           <div class="flex flex-wrap">
+            {% for recipe in recipes %}
             <div class="card card-compact w-48 bg-base-100 shadow-xl m-2">
               <figure>
                 <img
-                  src="https://recipe.r10s.jp/recipe-space/d/strg/ctrl/3/d9bd4a897502ddbe8d8b953388b1633ed4eeb9e3.64.9.3.3.jpg?interpolation=lanczos-none&fit=around|716:716&crop=716:716;*,*"
+                  src="{{ recipe.food_image_url }}"
                   alt="Shoes"
                 />
               </figure>
               <div class="card-body">
-                <h2 class="card-title">イチゴ大福</h2>
+                <h2 class="card-title">{{ recipe.recipe_title }}</h2>
                 <p>材料</p>
                 <div class="card-actions justify-end">
-                  <button class="btn btn-primary">詳細をみる</button>
+                  <button class="btn btn-primary"><a href="{{ recipe.recipe_url }}">詳細をみる</a></button>
                 </div>
               </div>
             </div>
-
-            <div class="card card-compact w-48 bg-base-100 shadow-xl m-2">
-              <figure>
-                <img
-                  src="https://recipe.r10s.jp/recipe-space/d/strg/ctrl/3/d9bd4a897502ddbe8d8b953388b1633ed4eeb9e3.64.9.3.3.jpg?interpolation=lanczos-none&fit=around|716:716&crop=716:716;*,*"
-                  alt="Shoes"
-                />
-              </figure>
-              <div class="card-body">
-                <h2 class="card-title">イチゴ大福</h2>
-                <p>材料</p>
-                <div class="card-actions justify-end">
-                  <button class="btn btn-primary">詳細をみる</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="card card-compact w-48 bg-base-100 shadow-xl m-2">
-              <figure>
-                <img
-                  src="https://recipe.r10s.jp/recipe-space/d/strg/ctrl/3/d9bd4a897502ddbe8d8b953388b1633ed4eeb9e3.64.9.3.3.jpg?interpolation=lanczos-none&fit=around|716:716&crop=716:716;*,*"
-                  alt="Shoes"
-                />
-              </figure>
-              <div class="card-body">
-                <h2 class="card-title">イチゴ大福</h2>
-                <p>材料</p>
-                <div class="card-actions justify-end">
-                  <button class="btn btn-primary">詳細をみる</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="card card-compact w-48 bg-base-100 shadow-xl m-2">
-              <figure>
-                <img
-                  src="https://recipe.r10s.jp/recipe-space/d/strg/ctrl/3/d9bd4a897502ddbe8d8b953388b1633ed4eeb9e3.64.9.3.3.jpg?interpolation=lanczos-none&fit=around|716:716&crop=716:716;*,*"
-                  alt="Shoes"
-                />
-              </figure>
-              <div class="card-body">
-                <h2 class="card-title">イチゴ大福</h2>
-                <p>材料</p>
-                <div class="card-actions justify-end">
-                  <button class="btn btn-primary">詳細をみる</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="card card-compact w-48 bg-base-100 shadow-xl m-2">
-              <figure>
-                <img
-                  src="https://recipe.r10s.jp/recipe-space/d/strg/ctrl/3/d9bd4a897502ddbe8d8b953388b1633ed4eeb9e3.64.9.3.3.jpg?interpolation=lanczos-none&fit=around|716:716&crop=716:716;*,*"
-                  alt="Shoes"
-                />
-              </figure>
-              <div class="card-body">
-                <h2 class="card-title">イチゴ大福</h2>
-                <p>材料</p>
-                <div class="card-actions justify-end">
-                  <button class="btn btn-primary">詳細をみる</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="card card-compact w-48 bg-base-100 shadow-xl m-2">
-              <figure>
-                <img
-                  src="https://recipe.r10s.jp/recipe-space/d/strg/ctrl/3/d9bd4a897502ddbe8d8b953388b1633ed4eeb9e3.64.9.3.3.jpg?interpolation=lanczos-none&fit=around|716:716&crop=716:716;*,*"
-                  alt="Shoes"
-                />
-              </figure>
-              <div class="card-body">
-                <h2 class="card-title">イチゴ大福</h2>
-                <p>材料</p>
-                <div class="card-actions justify-end">
-                  <button class="btn btn-primary">詳細をみる</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="card card-compact w-48 bg-base-100 shadow-xl m-2">
-              <figure>
-                <img
-                  src="https://recipe.r10s.jp/recipe-space/d/strg/ctrl/3/d9bd4a897502ddbe8d8b953388b1633ed4eeb9e3.64.9.3.3.jpg?interpolation=lanczos-none&fit=around|716:716&crop=716:716;*,*"
-                  alt="Shoes"
-                />
-              </figure>
-              <div class="card-body">
-                <h2 class="card-title">イチゴ大福</h2>
-                <p>材料</p>
-                <div class="card-actions justify-end">
-                  <button class="btn btn-primary">詳細をみる</button>
-                </div>
-              </div>
-            </div>
+            {% endfor %}
           </div>
-
           <div class="flex justify-center mt-4">
             <div class="btn-group">
               <button class="btn btn-active">1</button>
-              <button class="btn">2</button>
-              <button class="btn">3</button>
-              <button class="btn">4</button>
+              {% for page in pages %}
+              <button class="btn" type="submit" name="pagenation" value="{{ page }}">{{ page }}</button>
+              {% endfor %}
+              <button class="btn">{{ num }}</button>
             </div>
           </div>
         </div>
+      </form>
         <!-- 共通部分（ナビゲーションバー） ここから -->
         <div class="drawer-side">
           <label for="my-drawer-2" class="drawer-overlay"></label>
