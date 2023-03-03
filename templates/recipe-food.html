@@ -84,13 +84,16 @@
           </div>
 
           <div class="flex justify-center">
-            <div class="form-control">
+            <form action="./food-search" method="GET" class="form-control">
               <label class="label">
                 <span class="label-text">作りたい料理名を入力</span>
               </label>
               <label class="input-group m-1">
                 <input
                   type="text"
+                  id="q"
+                  name="q"
+                  value=""
                   placeholder="料理名"
                   class="input input-bordered"
                 />
@@ -111,7 +114,7 @@
                   </svg>
                 </button>
               </label>
-            </div>
+            </form>
           </div>
 
           <!-- Page content END -->
