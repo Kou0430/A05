@@ -83,25 +83,31 @@
               <li>検索結果</li>
             </ul>
           </div>
-
           <div class="overflow-x-auto w-full">
-            <table class="table w-full">
+            <h1 class="font-bold text-2xl">{{ result.recipeTitle }}</h1>
+            <p class="mt-2">レシピ詳細：<a class="link link-primary" href="{{ result.recipeUrl }}" target="_blank">{{ result.recipeUrl }}</a></p>
+            <table class="table w-full mt-4">
               <!-- head -->
               <thead>
                 <tr>
                   <th>
+                    <!--
                     <label>
                       <input type="checkbox" class="checkbox" />
                     </label>
+                    -->
                   </th>
                   <th>食材名</th>
+                  <!--
                   <th>個数・量</th>
                   <th>食材詳細</th>
+                  -->
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 <!-- row 1 -->
+                {% for material in result.recipeMaterial %}
                 <tr>
                   <th>
                     <label>
@@ -111,90 +117,34 @@
                   <td>
                     <div class="flex items-center space-x-3">
                       <div>
-                        <div class="font-bold">バナナ</div>
-                        <div class="text-sm opacity-50">United States</div>
+                        <div class="font-bold">{{ material }}</div>
+                        <!-- <div class="text-sm opacity-50">United States</div> -->
                       </div>
                     </div>
                   </td>
+                  <!--
                   <td>1個</td>
                   <th>
                     <button class="btn btn-ghost btn-xs">詳細</button>
                   </th>
+                  -->
                 </tr>
-                <!-- row 2 -->
-                <tr>
-                  <th>
-                    <label>
-                      <input type="checkbox" class="checkbox" />
-                    </label>
-                  </th>
-                  <td>
-                    <div class="flex items-center space-x-3">
-                      <div>
-                        <div class="font-bold">リンゴ</div>
-                        <div class="text-sm opacity-50">China</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>1個</td>
-                  <th>
-                    <button class="btn btn-ghost btn-xs">詳細</button>
-                  </th>
-                </tr>
-                <!-- row 3 -->
-                <tr>
-                  <th>
-                    <label>
-                      <input type="checkbox" class="checkbox" />
-                    </label>
-                  </th>
-                  <td>
-                    <div class="flex items-center space-x-3">
-                      <div>
-                        <div class="font-bold">ブドウ</div>
-                        <div class="text-sm opacity-50">Russia</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>1個</td>
-                  <th>
-                    <button class="btn btn-ghost btn-xs">詳細</button>
-                  </th>
-                </tr>
-                <!-- row 4 -->
-                <tr>
-                  <th>
-                    <label>
-                      <input type="checkbox" class="checkbox" />
-                    </label>
-                  </th>
-                  <td>
-                    <div class="flex items-center space-x-3">
-                      <div>
-                        <div class="font-bold">スイカ</div>
-                        <div class="text-sm opacity-50">Brazil</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>1個</td>
-                  <th>
-                    <button class="btn btn-ghost btn-xs">詳細</button>
-                  </th>
-                </tr>
+                {% endfor %}
               </tbody>
               <!-- foot -->
               <tfoot>
                 <tr>
                   <th></th>
                   <th>食材名</th>
+                  <!--
                   <th>個数・量</th>
                   <th>食材詳細</th>
+                  -->
                   <th></th>
                 </tr>
               </tfoot>
             </table>
           </div>
-
           <!-- Page content END -->
         </div>
         <!-- 共通部分（ナビゲーションバー） ここから -->

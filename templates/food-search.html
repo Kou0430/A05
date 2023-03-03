@@ -83,21 +83,25 @@
             </ul>
           </div>
 
-
+          <p class="mt-4">{{ recipeAmount }} 件の検索結果</p>
+          <p class="mb-2">{{ page }} ページ目</p>
 
           <div class="flex flex-wrap">
             {% for r in result %}
             <div class="card card-compact w-48 bg-base-100 shadow-xl m-2">
               <figure>
                 <img
-                  src="{{ r.food_image_url }}"
+                  src="{{ r.foodImageUrl }}"
                   alt="Shoes"
                 />
               </figure>
               <div class="card-body">
-                <h2 class="card-title">{{ r.recipe_title }}</h2>
+                <h2 class="card-title">{{ r.recipeTitle }}</h2>
+                {% for rm in r.recipeMaterial %}
+                  {{ rm }} <br>
+                {% endfor %}
                 <div class="card-actions justify-end">
-                  <a class="btn btn-primary" href="/foodlist?id={{ r.id }}">材料リストへ</a>
+                  <a class="btn btn-primary" href="/foodlist?id={{ r.recipeId }}">材料リストへ</a>
                 </div>
               </div>
             </div>
@@ -107,7 +111,7 @@
           <div class="flex justify-center mt-4">
             <div class="btn-group">
               {% for p in pageList %}
-                <a href="./food-search?q={{ recipeTitle }}&p={{ p }}" class="btn{% if p == page %} btn-active{% endif %}">{{ p }}</a>
+                <a href="./food-search?q={{ searchTitle }}&p={{ p }}" class="btn{% if p == page %} btn-active{% endif %}">{{ p }}</a>
               {% endfor %}
             </div>
           </div>
