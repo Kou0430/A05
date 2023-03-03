@@ -1,12 +1,10 @@
 from flask import Flask, render_template, redirect, request, session
-from cs50 import SQL
 import sqlite3
 import math
 
 app = Flask(__name__)
 # ※セッションを使いたいのでapp.secret_keyが必要？
 app.secret_key = 'abcde'
-db = SQL("sqlite:///recipe.db")
 
 @app.route("/")
 def index():
