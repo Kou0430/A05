@@ -1,165 +1,75 @@
-<!DOCTYPE html>
-<html lang="ja" data-theme="cupcake">
-  <head>
-    <title>Home</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@2.51.0/dist/full.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
-    <div class="lg:w-9/12 lg:m-auto">
-      <!-- 共通部分（ナビゲーションバー） ここから -->
-      <div class="lg:w-9/12 navbar bg-base-100 fixed z-50">
-        <div class="flex-none">
-          <label
-            for="my-drawer-2"
-            class="
-              swap-off
-              fill-current
-              btn btn-square btn-ghost
-              drawer-button
-              lg:hidden
-              swap swap-rotate
-            "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              class="swap-off inline-block w-5 h-5 stroke-current"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              ></path>
-            </svg>
-          </label>
-        </div>
-        <div class="flex-1">
-          <a href="/" class="btn btn-ghost normal-case text-xl"
-            >Madam Kitchen</a
-          >
-        </div>
-        <ul class="hidden sm:inline-flex menu menu-horizontal px-1">
-          <li><a>材料からレシピ検索</a></li>
-          <li><a>レシピから買い物リスト</a></li>
-        </ul>
+{% extends "base.html" %}
 
-        <div class="flex-none">
-          <button class="btn btn-square btn-ghost">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              class="inline-block w-5 h-5 stroke-current"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-              ></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-      <!-- 共通部分（ナビゲーションバー） ここまで -->
-      <div class="drawer drawer-mobile">
-        <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content mt-16 p-5">
-          <!-- Page content here -->
+{% block content %}
 
-          <div class="text-sm breadcrumbs mb-2">
-            <ul>
-              <li><a>ホーム</a></li>
-              <li><a>レシピから買い物リスト</a></li>
-              <li>検索結果</li>
-            </ul>
-          </div>
-          <div class="overflow-x-auto w-full">
-            <h1 class="font-bold text-2xl">{{ result.recipeTitle }}</h1>
-            <p class="mt-2">レシピ詳細：<a class="link link-primary" href="{{ result.recipeUrl }}" target="_blank">{{ result.recipeUrl }}</a></p>
-            <table class="table w-full mt-4">
-              <!-- head -->
-              <thead>
-                <tr>
-                  <th>
-                    <!--
-                    <label>
-                      <input type="checkbox" class="checkbox" />
-                    </label>
-                    -->
-                  </th>
-                  <th>食材名</th>
-                  <!--
-                  <th>個数・量</th>
-                  <th>食材詳細</th>
-                  -->
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- row 1 -->
-                {% for material in result.recipeMaterial %}
-                <tr>
-                  <th>
-                    <label>
-                      <input type="checkbox" class="checkbox" />
-                    </label>
-                  </th>
-                  <td>
-                    <div class="flex items-center space-x-3">
-                      <div>
-                        <div class="font-bold">{{ material }}</div>
-                        <!-- <div class="text-sm opacity-50">United States</div> -->
-                      </div>
-                    </div>
-                  </td>
-                  <!--
-                  <td>1個</td>
-                  <th>
-                    <button class="btn btn-ghost btn-xs">詳細</button>
-                  </th>
-                  -->
-                </tr>
-                {% endfor %}
-              </tbody>
-              <!-- foot -->
-              <tfoot>
-                <tr>
-                  <th></th>
-                  <th>食材名</th>
-                  <!--
-                  <th>個数・量</th>
-                  <th>食材詳細</th>
-                  -->
-                  <th></th>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-          <!-- Page content END -->
-        </div>
-        <!-- 共通部分（ナビゲーションバー） ここから -->
-        <div class="drawer-side">
-          <label for="my-drawer-2" class="drawer-overlay"></label>
-          <ul class="pt-24 menu p-4 w-80 bg-base-100 text-base-content">
-            <!-- Sidebar content here -->
-            <li><a>材料からレシピ検索</a></li>
-            <li><a>レシピから買い物リスト</a></li>
-            <li><a>ブックマーク</a></li>
-            <li><a>ログアウト</a></li>
-          </ul>
-        </div>
-        <!-- 共通部分（ナビゲーションバー） ここまで -->
-      </div>
-    </div>
-  </body>
-</html>
+  <div class="text-sm breadcrumbs mb-2">
+    <ul>
+      <li><a href="/">ホーム</a></li>
+      <li><a href="./recipe-food">レシピから買い物リスト</a></li>
+      <li>検索結果</li>
+    </ul>
+  </div>
+  <div class="overflow-x-auto w-full">
+    <h1 class="font-bold text-2xl">{{ result.recipeTitle }}</h1>
+    <p class="mt-2">レシピ詳細：<a class="link link-primary" href="{{ result.recipeUrl }}" target="_blank">{{ result.recipeUrl }}</a></p>
+    <table class="table w-full mt-4">
+      <!-- head -->
+      <thead>
+        <tr>
+          <th>
+            <!--
+            <label>
+              <input type="checkbox" class="checkbox" />
+            </label>
+            -->
+          </th>
+          <th>食材名</th>
+          <!--
+          <th>個数・量</th>
+          <th>食材詳細</th>
+          -->
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- row 1 -->
+        {% for material in result.recipeMaterial %}
+        <tr>
+          <th>
+            <label>
+              <input type="checkbox" class="checkbox" />
+            </label>
+          </th>
+          <td>
+            <div class="flex items-center space-x-3">
+              <div>
+                <div class="font-bold">{{ material }}</div>
+                <!-- <div class="text-sm opacity-50">United States</div> -->
+              </div>
+            </div>
+          </td>
+          <!--
+          <td>1個</td>
+          <th>
+            <button class="btn btn-ghost btn-xs">詳細</button>
+          </th>
+          -->
+        </tr>
+        {% endfor %}
+      </tbody>
+      <!-- foot -->
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>食材名</th>
+          <!--
+          <th>個数・量</th>
+          <th>食材詳細</th>
+          -->
+          <th></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+{% endblock %}

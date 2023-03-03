@@ -111,8 +111,18 @@ def pagenation_recipe_search():
 
         return render_template("recipe-search.html", recipes=displaylist, pages=range(int(len(recipelist)/10)+1))
 
-@app.route("/recipe-food")
+@app.route("/recipe-food", methods=['GET', 'POST'])
 def recipe_food():
+    if request.method == "POST":
+        # 送信された料理名を格納している
+        cooking = request.form.get('cooking')
+
+        if not cooking:
+            return render_template("recipe-food.html")
+
+        recipes = get_db().execute("SELECT * FROM recipe WHERE recipe_title LIKE ? GROUP BY recipe_title LIMIT 20", ('%'+cooking+'%',)).fetchall()
+
+        return render_template("food-search.html", recipes=recipes)
     return render_template("recipe-food.html")
 
 @app.route("/food-search", methods=["GET"])
@@ -217,7 +227,7 @@ def foodlist():
         result = {}
 
         recipeDetailFetchall = recipeDetailByRecipeId.fetchall()
-        if len(recipeDetail):
+        if len(recipeDetailFetchall):
             recipeDetail = recipeDetailFetchall[0]
 
             # 結果を加工・resultに詰める
