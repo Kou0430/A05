@@ -6,16 +6,33 @@ app = Flask(__name__)
 # ※セッションを使いたいのでapp.secret_keyが必要？
 app.secret_key = 'abcde'
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+
+@app.route("/register")
+def register():
+    return render_template("register.html")
+
+
+@app.route("/bookmarks")
+def bookmarks():
+    return render_template("bookmarks.html")
+
 
 @app.route("/food-recipe", methods=['GET', 'POST'])
 def food_recipe():
     if request.method == "POST":
         # 入力がなければこのページにとどまる
         if not request.form.get('food1'):
-            return  render_template("food-recipe.html")
+            return render_template("food-recipe.html")
         foods = [""] * 5
 
         foods[0] = request.form.get('food1')
@@ -37,7 +54,8 @@ def food_recipe():
         c = conn.cursor()
 
         # レシピを検索
-        c.execute("SELECT recipe_title, recipe_url, food_image_url, id FROM recipe WHERE recipe_material LIKE ? AND recipe_material LIKE ? AND recipe_material LIKE ? AND recipe_material LIKE ? AND recipe_material LIKE ?", ('%'+foods[0]+'%', '%'+foods[1]+'%', '%'+foods[2]+'%', '%'+foods[3]+'%', '%'+foods[4]+'%'))
+        c.execute("SELECT recipe_title, recipe_url, food_image_url, id FROM recipe WHERE recipe_material LIKE ? AND recipe_material LIKE ? AND recipe_material LIKE ? AND recipe_material LIKE ? AND recipe_material LIKE ?",
+                  ('%'+foods[0]+'%', '%'+foods[1]+'%', '%'+foods[2]+'%', '%'+foods[3]+'%', '%'+foods[4]+'%'))
 
         results = c.fetchall()
 
@@ -78,6 +96,7 @@ def food_recipe():
     else:
         return render_template("food-recipe.html")
 
+
 @app.route("/recipe-search", methods=['GET', 'POST'])
 def pagenation_recipe_search():
     if request.method == 'POST':
@@ -89,7 +108,8 @@ def pagenation_recipe_search():
         conn = sqlite3.connect('recipe.db')
         c = conn.cursor()
         # idからレシピの情報を検索するが、指定するidの数を可変にするため、formatで?を検索件数の数だけ置換している
-        c.execute("SELECT recipe_title, recipe_url, food_image_url, id FROM recipe WHERE id IN ({})".format(','.join('?'*len(recipeidlist))), tuple(recipeidlist))
+        c.execute("SELECT recipe_title, recipe_url, food_image_url, id FROM recipe WHERE id IN ({})".format(
+            ','.join('?'*len(recipeidlist))), tuple(recipeidlist))
 
         recipelist = c.fetchall()
         # 辞書型にしてhtmlに渡せるようにする
@@ -111,6 +131,7 @@ def pagenation_recipe_search():
 
         return render_template("recipe-search.html", recipes=displaylist, pages=range(int(len(recipelist)/10)+1))
 
+
 @app.route("/recipe-food", methods=['GET', 'POST'])
 def recipe_food():
     if request.method == "POST":
@@ -120,20 +141,22 @@ def recipe_food():
         if not cooking:
             return render_template("recipe-food.html")
 
-        recipes = get_db().execute("SELECT * FROM recipe WHERE recipe_title LIKE ? GROUP BY recipe_title LIMIT 20", ('%'+cooking+'%',)).fetchall()
+        recipes = get_db().execute("SELECT * FROM recipe WHERE recipe_title LIKE ? GROUP BY recipe_title LIMIT 20",
+                                   ('%'+cooking+'%',)).fetchall()
 
         return render_template("food-search.html", recipes=recipes)
     return render_template("recipe-food.html")
+
 
 @app.route("/food-search", methods=["GET"])
 def food_search():
     if request.method == "GET":
         # 検索キーワードがない場合、入力画面にリダイレクト
-        if not request.args.get("q",""):
+        if not request.args.get("q", ""):
             return redirect("/recipe-food")
 
         # 検索キーワードを取得
-        searchTitle = request.args.get("q","")
+        searchTitle = request.args.get("q", "")
 
         # DB設定
         dbname = 'recipe.db'
@@ -143,12 +166,13 @@ def food_search():
         # ページ数（入力がない場合は1）
         page = 1
         offset = 0
-        if request.args.get("p",""):
-            page = int(request.args.get("p",""))
+        if request.args.get("p", ""):
+            page = int(request.args.get("p", ""))
             offset = (int(page) - 1) * 10
 
         # レシピ数を取得し、ページングの総数を計算
-        recipeAmount = cur.execute("SELECT COUNT(DISTINCT recipe_title) FROM recipe WHERE recipe_title LIKE ? ORDER BY id ASC", ('%'+searchTitle+'%',))
+        recipeAmount = cur.execute(
+            "SELECT COUNT(DISTINCT recipe_title) FROM recipe WHERE recipe_title LIKE ? ORDER BY id ASC", ('%'+searchTitle+'%',))
         recipeAmount = int(recipeAmount.fetchall()[0][0])
         pageAmount = math.ceil(recipeAmount / 10)
 
@@ -178,7 +202,8 @@ def food_search():
         # レシピ総数が0以外なら
         if recipeAmount:
             # レシピ検索
-            recipeLists = cur.execute("SELECT id, recipe_title, recipe_url, food_image_url, recipe_material FROM recipe WHERE id IN (SELECT MIN(id) AS id FROM recipe WHERE recipe_title LIKE ? GROUP BY recipe_title ORDER BY id ASC) ORDER BY id ASC LIMIT 10 OFFSET ?", ('%'+searchTitle+'%', offset))
+            recipeLists = cur.execute(
+                "SELECT id, recipe_title, recipe_url, food_image_url, recipe_material FROM recipe WHERE id IN (SELECT MIN(id) AS id FROM recipe WHERE recipe_title LIKE ? GROUP BY recipe_title ORDER BY id ASC) ORDER BY id ASC LIMIT 10 OFFSET ?", ('%'+searchTitle+'%', offset))
 
             for recipeList in recipeLists.fetchall():
                 recipeId = int(recipeList[0])
@@ -205,15 +230,16 @@ def food_search():
 
         return render_template("food-search.html", result=result, searchTitle=searchTitle, page=page, pageList=pageList, recipeAmount=recipeAmount, pageAmount=pageAmount)
 
+
 @app.route("/foodlist", methods=["GET"])
 def foodlist():
     if request.method == "GET":
         # レシピIDが指定されていない場合、検索画面にリダイレクト
-        if not request.args.get("id",""):
+        if not request.args.get("id", ""):
             return redirect("/recipe-food")
 
         # レシピIDを取得
-        recipeId = request.args.get("id","")
+        recipeId = request.args.get("id", "")
 
         # DB設定
         dbname = 'recipe.db'
@@ -221,7 +247,8 @@ def foodlist():
         cur = conn.cursor()
 
         # 該当レシピを検索
-        recipeDetailByRecipeId = cur.execute("SELECT id, recipe_title, recipe_url, food_image_url, recipe_material FROM recipe WHERE id = ?", (recipeId,))
+        recipeDetailByRecipeId = cur.execute(
+            "SELECT id, recipe_title, recipe_url, food_image_url, recipe_material FROM recipe WHERE id = ?", (recipeId,))
 
         # 結果を入れる変数
         result = {}
