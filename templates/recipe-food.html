@@ -4,13 +4,13 @@
 
   <div class="text-sm breadcrumbs mb-2">
     <ul>
-      <li><a href="/">ホーム</a></li>
+      <li><a href="{{ url_for('index') }}">ホーム</a></li>
       <li>レシピから買い物リスト</li>
     </ul>
   </div>
 
   <div class="flex justify-center">
-    <form action="./food-search" method="GET" class="form-control">
+    <form action="{{ url_for('food_search') }}" method="GET" class="form-control">
       <label class="label">
         <span class="label-text">作りたい料理名を入力</span>
       </label>

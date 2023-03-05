@@ -98,7 +98,7 @@ def food_recipe():
 
 
 @app.route("/recipe-search", methods=['GET', 'POST'])
-def pagenation_recipe_search():
+def recipe_search():
     if request.method == 'POST':
         # ページ数を取得
         pagenum = int(request.form.get("pagenation"))

@@ -2,5 +2,157 @@
 
 {% block content %}
 
+<div class="text-sm breadcrumbs mb-2">
+  <ul>
+      <li><a href="{{ url_for('index') }}">ホーム</a></li>
+      <li>ブックマーク</li>
+  </ul>
+</div>
+
+<div class="overflow-x-auto w-full">
+  <table class="table w-full">
+    <!-- head -->
+    <thead>
+      <tr>
+        <th>レシピ名</th>
+        <th>材料</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- row 1 -->
+      <tr>
+        <td>
+          <div class="flex items-center space-x-3">
+            <div class="avatar">
+              <div class="mask mask-squircle w-12 h-12">
+                <img src="https://image.space.rakuten.co.jp/d/strg/ctrl/3/3234463525b19e024895fa1a4fc05fa896169e76.12.2.3.2.jpg" />
+              </div>
+            </div>
+            <div>
+              <div class="font-bold">りんご飴</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="flex flex-wrap">
+            <span class="badge badge-ghost badge-sm">材料1</span>
+            <span class="badge badge-ghost badge-sm">材料2</span>
+            <span class="badge badge-ghost badge-sm">材料3</span>
+            <span class="badge badge-ghost badge-sm">材料4</span>
+            <span class="badge badge-ghost badge-sm">材料5</span>
+          </div>
+        </td>
+        <td>
+          <a href="" class="btn btn-ghost btn-xs">材料リスト</a>
+        </td>
+        <th>
+          <a href="" class="btn btn-ghost btn-xs">レシピ詳細</a>
+        </th>
+      </tr>
+      <!-- row 2 -->
+      <tr>
+        <td>
+          <div class="flex items-center space-x-3">
+            <div class="avatar">
+              <div class="mask mask-squircle w-12 h-12">
+                <img src="https://image.space.rakuten.co.jp/d/strg/ctrl/3/3234463525b19e024895fa1a4fc05fa896169e76.12.2.3.2.jpg" />
+              </div>
+            </div>
+            <div>
+              <div class="font-bold">りんご飴</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="flex flex-wrap">
+            <span class="badge badge-ghost badge-sm">材料1</span>
+            <span class="badge badge-ghost badge-sm">材料2</span>
+            <span class="badge badge-ghost badge-sm">材料3</span>
+            <span class="badge badge-ghost badge-sm">材料4</span>
+            <span class="badge badge-ghost badge-sm">材料5</span>
+          </div>
+        </td>
+        <td>
+          <a href="" class="btn btn-ghost btn-xs">材料リスト</a>
+        </td>
+        <th>
+          <a href="" class="btn btn-ghost btn-xs">レシピ詳細</a>
+        </th>
+      </tr>
+      <!-- row 3 -->
+      <tr>
+        <td>
+          <div class="flex items-center space-x-3">
+            <div class="avatar">
+              <div class="mask mask-squircle w-12 h-12">
+                <img src="https://image.space.rakuten.co.jp/d/strg/ctrl/3/3234463525b19e024895fa1a4fc05fa896169e76.12.2.3.2.jpg" />
+              </div>
+            </div>
+            <div>
+              <div class="font-bold">りんご飴</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="flex flex-wrap">
+            <span class="badge badge-ghost badge-sm">材料1</span>
+            <span class="badge badge-ghost badge-sm">材料2</span>
+            <span class="badge badge-ghost badge-sm">材料3</span>
+            <span class="badge badge-ghost badge-sm">材料4</span>
+            <span class="badge badge-ghost badge-sm">材料5</span>
+          </div>
+        </td>
+        <td>
+          <a href="" class="btn btn-ghost btn-xs">材料リスト</a>
+        </td>
+        <th>
+          <a href="" class="btn btn-ghost btn-xs">レシピ詳細</a>
+        </th>
+      </tr>
+      <!-- row 4 -->
+      <tr>
+        <td>
+          <div class="flex items-center space-x-3">
+            <div class="avatar">
+              <div class="mask mask-squircle w-12 h-12">
+                <img src="https://image.space.rakuten.co.jp/d/strg/ctrl/3/3234463525b19e024895fa1a4fc05fa896169e76.12.2.3.2.jpg" />
+              </div>
+            </div>
+            <div>
+              <div class="font-bold">りんご飴</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="flex flex-wrap">
+            <span class="badge badge-ghost badge-sm">材料1</span>
+            <span class="badge badge-ghost badge-sm">材料2</span>
+            <span class="badge badge-ghost badge-sm">材料3</span>
+            <span class="badge badge-ghost badge-sm">材料4</span>
+            <span class="badge badge-ghost badge-sm">材料5</span>
+          </div>
+        </td>
+        <td>
+          <a href="" class="btn btn-ghost btn-xs">材料リスト</a>
+        </td>
+        <th>
+          <a href="" class="btn btn-ghost btn-xs">レシピ詳細</a>
+        </th>
+      </tr>
+    </tbody>
+    <!-- foot -->
+    <tfoot>
+      <tr>
+        <th>レシピ名</th>
+        <th>材料</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </tfoot>
+
+  </table>
+</div>
 
 {% endblock %}

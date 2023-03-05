@@ -2,6 +2,13 @@
 
 {% block content %}
 
+<div class="text-sm breadcrumbs mb-2">
+  <ul>
+      <li><a href="{{ url_for('index') }}">ホーム</a></li>
+      <li>ログイン</li>
+  </ul>
+</div>
+
 <div class="hero-content flex-col">
   <div class="text-center">
     <h1 class="text-4xl font-bold">ログイン</h1>
@@ -19,11 +26,11 @@
           <span class="label-text">パスワード</span>
         </label>
         <input type="text" placeholder="password" class="input input-bordered" />
-        <!--
+      </div>
+      <div class="form-control">
         <label class="label">
-          <a href="#" class="label-text-alt link link-hover">パスワードを忘れた場合</a>
+          <a href="/register" class="label-text-alt link link-hover">新規ユーザー登録</a>
         </label>
-        -->
       </div>
       <div class="form-control mt-6">
         <button class="btn">ログイン</button>
