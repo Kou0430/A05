@@ -2,11 +2,11 @@
 
 {% block content %}
 
-  <form action="/recipe-search" method="post">
+  <form action="{{ url_for('recipe_search') }}" method="post">
     <div class="text-sm breadcrumbs">
       <ul>
-        <li><a href="/">ホーム</a></li>
-        <li><a href="./food-recipe">材料からレシピ検索</a></li>
+        <li><a href="{{ url_for('index') }}">ホーム</a></li>
+        <li><a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a></li>
         <li>検索結果</li>
       </ul>
     </div>

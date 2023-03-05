@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Page content here -->
 
 <div class="text-sm breadcrumbs mb-2">
   <ul>
@@ -40,6 +39,7 @@
 </div>
 <div class="divider"></div>
 <div class="grid h-32 card bg-accent rounded-box place-items-center">
-ブックマークを見る
+  <a href="{{ url_for('bookmarks') }}">ブックマークを見る</a>
 </div>
+
 {% endblock %}
