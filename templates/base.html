@@ -48,10 +48,14 @@
           >
         </div>
         <ul class="hidden sm:inline-flex menu menu-horizontal px-1">
+          {% if session["user_id"] %}
           <li><a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a></li>
           <li><a href="{{ url_for('recipe_food') }}">レシピから買い物リスト</a></li>
           <li><a href="{{ url_for('logout') }}">ログアウト</a></li>
+          {% else %}
+          <li><a href="{{ url_for('login') }}">ログイン</a></li>
           <li><a href="{{ url_for('register') }}">新規ユーザー登録</a></li>
+          {% endif %}
         </ul>
 
         <div class="flex-none">
@@ -85,12 +89,15 @@
           <label for="my-drawer-2" class="drawer-overlay"></label>
           <ul class="pt-24 menu p-4 w-80 bg-base-100 text-base-content">
             <!-- Sidebar content here -->
+            {% if session["user_id"] %}
             <li><a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a></li>
             <li><a href="{{ url_for('recipe_food') }}">レシピから買い物リスト</a></li>
             <li><a href="{{ url_for('bookmarks') }}">ブックマーク</a></li>
-            <li><a href="{{ url_for('login') }}">ログイン</a></li>
             <li><a href="{{ url_for('logout') }}">ログアウト</a></li>
+            {% else %}
+            <li><a href="{{ url_for('login') }}">ログイン</a></li>
             <li><a href="{{ url_for('register') }}">新規ユーザー登録</a></li>
+            {% endif %}
           </ul>
         </div>
         <!-- 共通部分（ナビゲーションバー） ここまで -->

@@ -31,6 +31,7 @@ def unauthorized():
 @app.route("/logout", methods=['GET'])
 def logout():
     logout_user()
+    session.clear()
     return redirect('/login')
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -49,6 +50,8 @@ def login():
         ).fetchone()
         if username is not None:
             if check_password_hash(user_data[0],password):
+                user_id = get_db().execute("SELECT id FROM user WHERE username = ?", [username,]).fetchone()
+                session["user_id"] = user_id[0]
                 user = User(username)
                 login_user(user)
                 return redirect("/")
@@ -84,7 +87,7 @@ def register():
         db = get_db()
         # 入力されたユーザーネームが使われてないか確認
         usercheck = get_db().execute("SELECT username from user WHERE username=?",[username,]).fetchall()
-        
+
         # 新規登録をする
         if not usercheck:
             db.execute(
