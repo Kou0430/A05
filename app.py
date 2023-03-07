@@ -1,8 +1,11 @@
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session, g
 import sqlite3
 import math
 import os
 from flask_login import UserMixin, LoginManager, login_required, login_user, logout_user
+from werkzeug.security import generate_password_hash, check_password_hash
+
+DATABASE="recipe.db"
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -36,25 +39,70 @@ def login():
     username = ''
 
     if request.method == 'POST':
+        # 入力を受け取る
         username = request.form.get('username')
         password = request.form.get('password')
+
         # ログインのチェック
-        if username == 'ryota' and password == '1234':
-            user = User(username)
-            login_user(user)
-            return redirect("/")
-        else:
-            error_message = '入力されたIDもしくはパスワードが誤っています'
+        user_data = get_db().execute(
+            "SELECT password FROM user WHERE username=?",[username,]
+        ).fetchone()
+        if username is not None:
+            if check_password_hash(user_data[0],password):
+                user = User(username)
+                login_user(user)
+                return redirect("/")
+
+        error_message = '入力されたIDもしくはパスワードが誤っています'
+
     return render_template("login.html", username=username, error_message=error_message)
+
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        # 入力を受け取る
+        username = request.form.get('username')
+
+        if not username:
+            return redirect("/register")
+
+        password = request.form.get('password')
+
+        if not password:
+            return redirect("/register")
+
+        confirmation = request.form.get('confirmation')
+
+        if password != confirmation:
+            return redirect("/register")
+
+        # パスワードをハッシュ化
+        pass_hash = generate_password_hash(password, method = 'sha256')
+
+
+        db = get_db()
+        # 入力されたユーザーネームが使われてないか確認
+        usercheck = get_db().execute("SELECT username from user WHERE username=?",[username,]).fetchall()
+        
+        # 新規登録をする
+        if not usercheck:
+            db.execute(
+                "INSERT INTO user (username,password) values(?,?)",
+                [username,pass_hash]
+            )
+            db.commit()
+            return redirect('/login')
+        else:
+            error_message = '入力されたユーザー名はすでに登録されています'
+
+    return render_template("register.html")
+
 
 @app.route("/")
 @login_required
 def index():
     return render_template("index.html")
-
-@app.route("/register")
-def register():
-    return render_template("register.html")
 
 
 @app.route("/bookmarks")
@@ -325,3 +373,13 @@ def foodlist():
         conn.close()
 
         return render_template("foodlist.html", result=result)
+
+# database
+def connect_db():
+    rv = sqlite3.connect(DATABASE)
+    rv.row_factory = sqlite3.Row
+    return rv
+def get_db():
+    if not hasattr(g, 'sqlite_db'):
+        g.sqlite_db = connect_db()
+    return g.sqlite_db
