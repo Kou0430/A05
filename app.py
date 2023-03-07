@@ -1,21 +1,56 @@
 from flask import Flask, render_template, redirect, request, session
 import sqlite3
 import math
+import os
+from flask_login import UserMixin, LoginManager, login_required, login_user, logout_user
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
+login_manager= LoginManager()
+login_manager.init_app(app)
+
 # ※セッションを使いたいのでapp.secret_keyが必要？
 app.secret_key = 'abcde'
 
+class User(UserMixin):
+    def __init__(self, userid):
+        self.id = userid
+
+## ログイン
+@login_manager.user_loader
+def load_user(userid):
+    return User(userid)
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    return redirect('/login')
+
+@app.route("/logout", methods=['GET'])
+def logout():
+    logout_user()
+    return redirect('/login')
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    error_message = ''
+    username = ''
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        # ログインのチェック
+        if username == 'ryota' and password == '1234':
+            user = User(username)
+            login_user(user)
+            return redirect("/")
+        else:
+            error_message = '入力されたIDもしくはパスワードが誤っています'
+    return render_template("login.html", username=username, error_message=error_message)
 
 @app.route("/")
+@login_required
 def index():
     return render_template("index.html")
-
-
-@app.route("/login")
-def login():
-    return render_template("login.html")
-
 
 @app.route("/register")
 def register():
@@ -23,11 +58,13 @@ def register():
 
 
 @app.route("/bookmarks")
+@login_required
 def bookmarks():
     return render_template("bookmarks.html")
 
 
 @app.route("/food-recipe", methods=['GET', 'POST'])
+@login_required
 def food_recipe():
     if request.method == "POST":
         # 入力がなければこのページにとどまる
@@ -98,6 +135,7 @@ def food_recipe():
 
 
 @app.route("/recipe-search", methods=['GET', 'POST'])
+@login_required
 def recipe_search():
     if request.method == 'POST':
         # ページ数を取得
@@ -133,6 +171,7 @@ def recipe_search():
 
 
 @app.route("/recipe-food", methods=['GET', 'POST'])
+@login_required
 def recipe_food():
     if request.method == "POST":
         # 送信された料理名を格納している
@@ -149,6 +188,7 @@ def recipe_food():
 
 
 @app.route("/food-search", methods=["GET"])
+@login_required
 def food_search():
     if request.method == "GET":
         # 検索キーワードがない場合、入力画面にリダイレクト
@@ -232,6 +272,7 @@ def food_search():
 
 
 @app.route("/foodlist", methods=["GET"])
+@login_required
 def foodlist():
     if request.method == "GET":
         # レシピIDが指定されていない場合、検索画面にリダイレクト
