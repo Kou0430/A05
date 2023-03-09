@@ -177,9 +177,9 @@ def food_recipe():
         # ページ数
             pages = int(len(uniquelist)/10)+1
 
-            return render_template("recipe-search.html", recipes=displaylist, pages=range(pages+1), num=len(uniquelist))
+            return render_template("recipe-search.html", recipes=displaylist, pages=range(2, min(5, pages+1)), num=len(uniquelist), now=1, last=pages-1)
         else:
-            return render_template("recipe-search.html", recipes=uniquelist, pages=range(1+1), num=len(uniquelist))
+            return render_template("recipe-search.html", recipes=uniquelist, pages=range(2,2), num=len(uniquelist), now=1)
 
     else:
         return render_template("food-recipe.html")
@@ -218,7 +218,7 @@ def recipe_search():
         except IndexError:
             pass
 
-        return render_template("recipe-search.html", recipes=displaylist, pages=range(int(len(recipelist)/10)+1))
+        return render_template("recipe-search.html", recipes=displaylist, pages=range(max(2, pagenum-3), min(int(len(recipelist)/10), pagenum+4)), now=pagenum, last=int(len(recipelist)/10))
 
 
 @app.route("/recipe-food", methods=['GET', 'POST'])

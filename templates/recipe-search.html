@@ -30,11 +30,15 @@
     </div>
     <div class="flex justify-center mt-4">
       <div class="btn-group">
-        <button class="btn btn-active">1</button>
+        <button class="btn " name="pagenation" value="1">1</button>
         {% for page in pages %}
-        <button class="btn" type="submit" name="pagenation" value="{{ page }}">{{ page }}</button>
+          {% if page == now %}
+            <button class="btn btn-active" type="submit" name="pagenation" value="{{ page }}">{{ page }}</button>
+          {% else %}
+            <button class="btn " name="pagenation" value="{{ page }}">{{ page }}</button>
+          {% endif %}
         {% endfor %}
-        <button class="btn">{{ num }}</button>
+        <button class="btn " name="pagenation" value="{{ last }}">{{ last }}</button>
       </div>
     </div>
   </form>
