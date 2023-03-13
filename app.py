@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, session, g
+from flask import Flask, render_template, redirect, request, session, g, url_for
 import sqlite3
 import math
 import os
@@ -111,7 +111,21 @@ def index():
 @app.route("/bookmarks")
 @login_required
 def bookmarks():
-    return render_template("bookmarks.html")
+    recipe_ids = get_db().execute("SELECT recipe_id FROM bookmark WHERE user_id = ?", [session["user_id"], ]).fetchall()
+
+    bookmarks = []
+
+    for recipe_id in recipe_ids:
+        bookmarks.append(get_db().execute("SELECT * FROM recipe WHERE id = ?", [recipe_id["recipe_id"], ]).fetchone())
+
+    rows = get_db().execute("SELECT recipe_id FROM bookmark WHERE user_id=?", [session['user_id'], ])
+    bookmark_RecipeIds = []
+
+    for row in rows:
+        if not row['recipe_id'] in bookmark_RecipeIds:
+            bookmark_RecipeIds.append(row['recipe_id'])
+
+    return render_template("bookmarks.html", bookmarks=bookmarks, bookmark_RecipeIds=bookmark_RecipeIds)
 
 
 @app.route("/food-recipe", methods=['GET', 'POST'])
@@ -162,6 +176,13 @@ def food_recipe():
                 dic['id'] = results[i][3]
                 checklist.append(results[i][0])
                 uniquelist.append(dic)
+        # ブックマークついているものをbookmark_RecipeIdsにいれる
+        rows = get_db().execute("SELECT recipe_id FROM bookmark WHERE user_id=?", [session['user_id'], ]).fetchall()
+        bookmark_RecipeIds = []
+
+        for row in rows:
+            if not row['recipe_id'] in bookmark_RecipeIds:
+                bookmark_RecipeIds.append(row['recipe_id'])
 
         # 検索結果をセッションで保持
         idlist = []
@@ -177,9 +198,9 @@ def food_recipe():
         # ページ数
             pages = int(len(uniquelist)/10)+1
 
-            return render_template("recipe-search.html", recipes=displaylist, pages=range(2, min(5, pages+1)), num=len(uniquelist), now=1, last=pages-1)
+            return render_template("recipe-search.html", recipes=displaylist, pages=range(2, min(5, pages+1)), num=len(uniquelist), now=1, last=pages-1, bookmark_RecipeIds=bookmark_RecipeIds)
         else:
-            return render_template("recipe-search.html", recipes=uniquelist, pages=range(2,2), num=len(uniquelist), now=1)
+            return render_template("recipe-search.html", recipes=uniquelist, pages=range(2,2), num=len(uniquelist), now=1, bookmark_RecipeIds=bookmark_RecipeIds)
 
     else:
         return render_template("food-recipe.html")
@@ -188,9 +209,10 @@ def food_recipe():
 @app.route("/recipe-search", methods=['GET', 'POST'])
 @login_required
 def recipe_search():
-    if request.method == 'POST':
+    if request.method == "POST":
         # ページ数を取得
         pagenum = int(request.form.get("pagenation"))
+
         # 検索したレシピのidを取得
         recipeidlist = session['recipes']
 
@@ -210,6 +232,17 @@ def recipe_search():
             dic['id'] = recipelist[i][3]
             recipelist[i] = dic
         displaylist = []
+
+        # ブックマークついているものをbookmark_RecipeIdsにいれる
+        rows = get_db().execute("SELECT recipe_id FROM bookmark WHERE user_id=?", [session['user_id'], ]).fetchall()
+        bookmark_RecipeIds = []
+
+        for row in rows:
+            if not row['recipe_id'] in bookmark_RecipeIds:
+                bookmark_RecipeIds.append(row['recipe_id'])
+
+        print(bookmark_RecipeIds)
+
         # そのページに表示する10件を取り出す
         try:
             for i in range((pagenum-1)*10, pagenum*10):
@@ -218,7 +251,8 @@ def recipe_search():
         except IndexError:
             pass
 
-        return render_template("recipe-search.html", recipes=displaylist, pages=range(max(2, pagenum-3), min(int(len(recipelist)/10), pagenum+4)), now=pagenum, last=int(len(recipelist)/10))
+        return render_template("recipe-search.html", recipes=displaylist, pages=range(max(2, pagenum-3), min(int(len(recipelist)/10), pagenum+4)), now=pagenum, last=int(len(recipelist)/10), bookmark_RecipeIds=bookmark_RecipeIds)
+
 
 
 @app.route("/recipe-food", methods=['GET', 'POST'])
@@ -376,6 +410,24 @@ def foodlist():
         conn.close()
 
         return render_template("foodlist.html", result=result)
+
+@app.route("/<id>/bookmark", methods={"GET", "POST"})
+@login_required
+def bookmark(id):
+    get_db().execute("INSERT INTO bookmark (user_id, recipe_id) VALUES(?,?)",[session["user_id"], id,])
+
+    get_db().commit()
+
+    return redirect("/bookmarks")
+
+@app.route("/<id>/bookmark-release", methods={"GET", "POST"})
+@login_required
+def bookmark_release(id):
+    get_db().execute("DELETE FROM bookmark WHERE user_id=? AND recipe_id=?",[session["user_id"], id,])
+
+    get_db().commit()
+
+    return redirect("/bookmarks")
 
 # database
 def connect_db():

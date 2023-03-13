@@ -24,6 +24,15 @@
           <div class="card-actions justify-end">
             <button class="btn btn-primary"><a href="{{ recipe.recipe_url }}">詳細をみる</a></button>
           </div>
+          {% if not recipe.id in bookmark_RecipeIds %}
+          <div class="card-actions justify-end">
+            <button class="btn btn-outline btn-success"><a href="/{{ recipe.id }}/bookmark">ブックマークする</a></button>
+          </div>
+          {% else %}
+          <div class="card-actions justify-end">
+            <button class="btn btn-success"><a href="/{{ recipe.id }}/bookmark-release">ブックマーク解除</a></button>
+          </div>
+          {% endif %}
         </div>
       </div>
       {% endfor %}
