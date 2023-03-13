@@ -24,26 +24,21 @@
           <div class="card-actions justify-end">
             <button class="btn btn-primary"><a href="{{ recipe.recipe_url }}">詳細をみる</a></button>
           </div>
-          {% if not recipe.id in bookmark_ReviewIds %}
-          <div class="card-actions justify-end">
-            <button class="btn btn-outline btn-success"><a href="recipe.id/recipe-search/bookmark">ブックマーク</a></button>
-          </div>
-          {% else %}
-          <div class="card-actions justify-end">
-            <button class="btn btn-success"><a href="recipe.id/recipe-search/bookmark-release">ブックマーク解除</a></button>
-          </div>
-          {% endif %}
         </div>
       </div>
       {% endfor %}
     </div>
     <div class="flex justify-center mt-4">
       <div class="btn-group">
-        <button class="btn btn-active">1</button>
+        <button class="btn " name="pagenation" value="1">1</button>
         {% for page in pages %}
-        <button class="btn" type="submit" name="pagenation" value="{{ page }}">{{ page }}</button>
+          {% if page == now %}
+            <button class="btn btn-active" type="submit" name="pagenation" value="{{ page }}">{{ page }}</button>
+          {% else %}
+            <button class="btn " name="pagenation" value="{{ page }}">{{ page }}</button>
+          {% endif %}
         {% endfor %}
-        <button class="btn">{{ num }}</button>
+        <button class="btn " name="pagenation" value="{{ last }}">{{ last }}</button>
       </div>
     </div>
   </form>

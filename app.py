@@ -108,23 +108,10 @@ def index():
     return render_template("index.html")
 
 
-# @app.route("/bookmarks")
-# @login_required
-# def bookmarks():
-#     recipe_ids = get_db().execute("SELECT recipe_id FROM bookmark WHERE user_id = ?", [session["user_id"], ]).fetchall()
-
-#     bookmarks = []
-
-#     for recipe_id in recipe_ids:
-#         bookmarks.append(get_db().execute("SELECT * FROM bookmark WHERE id = ?", [recipe_id["recipe_id"], ]).fetchone())
-
-#     rows = get_db().execute("SELECT recipe_id FROM like WHERE user_id=?", [session['user_id'], ]).fetchall()
-#     bookmark_RecipeIds = []
-
-#     for row in rows:
-#         if not row['review_id'] in like_ReviewIds:
-#             bool_ReviewIds.append(row['review_id']
-#     return render_template("bookmarks.html")
+@app.route("/bookmarks")
+@login_required
+def bookmarks():
+    return render_template("bookmarks.html")
 
 
 @app.route("/food-recipe", methods=['GET', 'POST'])
@@ -190,9 +177,9 @@ def food_recipe():
         # ページ数
             pages = int(len(uniquelist)/10)+1
 
-            return render_template("recipe-search.html", recipes=displaylist, pages=range(pages+1), num=len(uniquelist))
+            return render_template("recipe-search.html", recipes=displaylist, pages=range(2, min(5, pages+1)), num=len(uniquelist), now=1, last=pages-1)
         else:
-            return render_template("recipe-search.html", recipes=uniquelist, pages=range(1+1), num=len(uniquelist))
+            return render_template("recipe-search.html", recipes=uniquelist, pages=range(2,2), num=len(uniquelist), now=1)
 
     else:
         return render_template("food-recipe.html")
@@ -231,15 +218,7 @@ def recipe_search():
         except IndexError:
             pass
 
-        rows = get_db().execute("SELECT recipe_id FROM bookmark WHERE user_id=?", [session['user_id'], ])
-        bookmark_recipeIds = []
-
-        for row in rows:
-            if not row['recipe_id'] in bookmark_recipeIds:
-                bookmark_recipeIds.append(row['recipe_id'])
-        print(bookmark_recipeIds)
-
-        return render_template("recipe-search.html", recipes=displaylist, pages=range(int(len(recipelist)/10)+1), bookmark_recipeIds = bookmark_recipeIds)
+        return render_template("recipe-search.html", recipes=displaylist, pages=range(max(2, pagenum-3), min(int(len(recipelist)/10), pagenum+4)), now=pagenum, last=int(len(recipelist)/10))
 
 
 @app.route("/recipe-food", methods=['GET', 'POST'])
@@ -397,24 +376,6 @@ def foodlist():
         conn.close()
 
         return render_template("foodlist.html", result=result)
-
-@app.route("/<id>/recipe-search/bookmark", methods={"GET", "POST"})
-@login_required
-def recipeSearch_bookmark(id):
-    get_db().execute("INSERT INTO bookmark (user_id, recipe_id) VALUES(?,?)",[session["user_id"], id,])
-
-    get_db().commit()
-
-    return redirect("/bookmarks")
-
-@app.route("/<id>/recipe-search/bookmark-release", methods={"GET", "POST"})
-@login_required
-def recipeSearch_bookmarkRelease(id):
-    get_db().execute("DELETE FROM bookmark WHERE user_id=? AND recipe_id=?",[session["user_id"], id,])
-
-    get_db().commit()
-
-    return redirect("/bookmarks")
 
 # database
 def connect_db():
