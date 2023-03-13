@@ -4,35 +4,47 @@ import math
 import os
 from flask_login import UserMixin, LoginManager, login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
+import io
+import numpy as np
+import cv2
+import datetime
+from google.cloud import vision
+from deep_translator import GoogleTranslator
 
-DATABASE="recipe.db"
+DATABASE = "recipe.db"
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
-login_manager= LoginManager()
+login_manager = LoginManager()
 login_manager.init_app(app)
 
 # ※セッションを使いたいのでapp.secret_keyが必要？
 app.secret_key = 'abcde'
 
+
 class User(UserMixin):
     def __init__(self, userid):
         self.id = userid
 
-## ログイン
+# ログイン
+
+
 @login_manager.user_loader
 def load_user(userid):
     return User(userid)
 
+
 @login_manager.unauthorized_handler
 def unauthorized():
     return redirect('/login')
+
 
 @app.route("/logout", methods=['GET'])
 def logout():
     logout_user()
     session.clear()
     return redirect('/login')
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -46,11 +58,12 @@ def login():
 
         # ログインのチェック
         user_data = get_db().execute(
-            "SELECT password FROM user WHERE username=?",[username,]
+            "SELECT password FROM user WHERE username=?", [username,]
         ).fetchone()
         if username is not None:
-            if check_password_hash(user_data[0],password):
-                user_id = get_db().execute("SELECT id FROM user WHERE username = ?", [username,]).fetchone()
+            if check_password_hash(user_data[0], password):
+                user_id = get_db().execute(
+                    "SELECT id FROM user WHERE username = ?", [username,]).fetchone()
                 session["user_id"] = user_id[0]
                 user = User(username)
                 login_user(user)
@@ -81,18 +94,18 @@ def register():
             return redirect("/register")
 
         # パスワードをハッシュ化
-        pass_hash = generate_password_hash(password, method = 'sha256')
-
+        pass_hash = generate_password_hash(password, method='sha256')
 
         db = get_db()
         # 入力されたユーザーネームが使われてないか確認
-        usercheck = get_db().execute("SELECT username from user WHERE username=?",[username,]).fetchall()
+        usercheck = get_db().execute(
+            "SELECT username from user WHERE username=?", [username,]).fetchall()
 
         # 新規登録をする
         if not usercheck:
             db.execute(
                 "INSERT INTO user (username,password) values(?,?)",
-                [username,pass_hash]
+                [username, pass_hash]
             )
             db.commit()
             return redirect('/login')
@@ -119,23 +132,24 @@ def bookmarks():
 def food_recipe():
     if request.method == "POST":
         # 入力がなければこのページにとどまる
-        if not request.form.get('food1'):
+        getList = request.form.getlist('foods')
+        if not getList:
             return render_template("food-recipe.html")
         foods = [""] * 5
 
-        foods[0] = request.form.get('food1')
+        foods[0] = getList[0]
 
-        if request.form.get('food2'):
-            foods[1] = request.form.get('food2')
+        if len(getList) >= 2:
+            foods[1] = getList[1]
 
-        if request.form.get('food3'):
-            foods[2] = request.form.get('food3')
+        if len(getList) >= 3:
+            foods[2] = getList[2]
 
-        if request.form.get('food4'):
-            foods[3] = request.form.get('food4')
+        if len(getList) >= 4:
+            foods[3] = getList[3]
 
-        if request.form.get('food5'):
-            foods[4] = request.form.get('food5')
+        if len(getList) >= 5:
+            foods[4] = getList[4]
 
         # データベースに接続
         conn = sqlite3.connect('recipe.db')
@@ -377,11 +391,61 @@ def foodlist():
 
         return render_template("foodlist.html", result=result)
 
+
+@app.route("/image-upload", methods=["GET"])
+@login_required
+def image_upload():
+    return render_template("image-upload.html")
+
+
+@app.route("/image-search", methods=["GET", "POST"])
+@login_required
+def image_search():
+    img_dir = "static/imgs/"
+    if request.method == 'GET':
+        img_path = None
+        result = None
+        return render_template("img.html", result=result, img_path=img_path)
+    elif request.method == 'POST':
+        # POSTで受け取った画像を読み込む
+        stream = request.files['img'].stream
+        img_array = np.asarray(bytearray(stream.read()), dtype=np.uint8)
+        img = cv2.imdecode(img_array, 1)
+
+        # 現在時刻を名前として「imgs/」に保存する
+        dt_now = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
+        img_path = img_dir + dt_now + ".jpg"
+        cv2.imwrite(img_path, img)
+
+        client = vision.ImageAnnotatorClient()
+
+        with io.open(img_path, 'rb') as image_file:
+            content = image_file.read()
+
+        image = vision.Image(content=content)
+
+        response = client.label_detection(image=image)
+        labels = response.label_annotations
+
+        result = []
+        for label in labels:
+            dict = {}
+            dict["description"] = GoogleTranslator(
+                source='auto', target='ja').translate(label.description)
+            dict["score"] = label.score
+            result.append(dict)
+
+        return render_template("image-search.html", result=result, img_path=img_path)
+
 # database
+
+
 def connect_db():
     rv = sqlite3.connect(DATABASE)
     rv.row_factory = sqlite3.Row
     return rv
+
+
 def get_db():
     if not hasattr(g, 'sqlite_db'):
         g.sqlite_db = connect_db()

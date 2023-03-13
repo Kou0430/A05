@@ -47,7 +47,7 @@
             >Madam's Kitchen</a
           >
         </div>
-        <ul class="hidden sm:inline-flex menu menu-horizontal px-1">
+        <ul class="hidden md:inline-flex menu menu-horizontal px-1">
           {% if session["user_id"] %}
           <li><a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a></li>
           <li><a href="{{ url_for('recipe_food') }}">レシピから買い物リスト</a></li>
