@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, session, g
+from flask import Flask, render_template, redirect, request, session, g, url_for
 import sqlite3
 import math
 import os
@@ -12,8 +12,6 @@ app.secret_key = os.urandom(24)
 login_manager= LoginManager()
 login_manager.init_app(app)
 
-# ※セッションを使いたいのでapp.secret_keyが必要？
-app.secret_key = 'abcde'
 
 class User(UserMixin):
     def __init__(self, userid):
@@ -111,7 +109,21 @@ def index():
 @app.route("/bookmarks")
 @login_required
 def bookmarks():
-    return render_template("bookmarks.html")
+    recipe_ids = get_db().execute("SELECT recipe_id FROM bookmark WHERE user_id = ?", [session["user_id"], ]).fetchall()
+
+    bookmarks = []
+
+    for recipe_id in recipe_ids:
+        bookmarks.append(get_db().execute("SELECT * FROM recipe WHERE id = ?", [recipe_id["recipe_id"], ]).fetchone())
+
+    rows = get_db().execute("SELECT recipe_id FROM bookmark WHERE user_id=?", [session['user_id'], ])
+    bookmark_RecipeIds = []
+
+    for row in rows:
+        if not row['recipe_id'] in bookmark_RecipeIds:
+            bookmark_RecipeIds.append(row['recipe_id'])
+
+    return render_template("bookmarks.html", bookmarks=bookmarks, bookmark_RecipeIds=bookmark_RecipeIds)
 
 
 @app.route("/food-recipe", methods=['GET', 'POST'])
@@ -163,62 +175,65 @@ def food_recipe():
                 checklist.append(results[i][0])
                 uniquelist.append(dic)
 
+
         # 検索結果をセッションで保持
         idlist = []
         for i in range(len(uniquelist)):
             idlist.append(uniquelist[i]['id'])
         session['recipes'] = idlist
 
-        # 10件以上なら10件まで表示
-        if len(uniquelist) > 10:
-            displaylist = []
-            for i in range(10):
-                displaylist.append(uniquelist[i])
-        # ページ数
-            pages = int(len(uniquelist)/10)+1
-
-            return render_template("recipe-search.html", recipes=displaylist, pages=range(pages+1), num=len(uniquelist))
-        else:
-            return render_template("recipe-search.html", recipes=uniquelist, pages=range(1+1), num=len(uniquelist))
+        return redirect("/1/recipe-search")
 
     else:
         return render_template("food-recipe.html")
 
 
-@app.route("/recipe-search", methods=['GET', 'POST'])
+@app.route("/<page>/recipe-search", methods=['GET', 'POST'])
 @login_required
-def recipe_search():
-    if request.method == 'POST':
-        # ページ数を取得
-        pagenum = int(request.form.get("pagenation"))
-        # 検索したレシピのidを取得
-        recipeidlist = session['recipes']
+def recipe_search(page):
 
-        conn = sqlite3.connect('recipe.db')
-        c = conn.cursor()
-        # idからレシピの情報を検索するが、指定するidの数を可変にするため、formatで?を検索件数の数だけ置換している
-        c.execute("SELECT recipe_title, recipe_url, food_image_url, id FROM recipe WHERE id IN ({})".format(
-            ','.join('?'*len(recipeidlist))), tuple(recipeidlist))
+    # ページ数を取得
+    pagenum = int(page)
 
-        recipelist = c.fetchall()
-        # 辞書型にしてhtmlに渡せるようにする
-        for i in range(len(recipeidlist)):
-            dic = {}
-            dic['recipe_title'] = recipelist[i][0]
-            dic['recipe_url'] = recipelist[i][1]
-            dic['food_image_url'] = recipelist[i][2]
-            dic['id'] = recipelist[i][3]
-            recipelist[i] = dic
-        displaylist = []
-        # そのページに表示する10件を取り出す
-        try:
-            for i in range((pagenum-1)*10, pagenum*10):
-                displaylist.append(recipelist[i])
-        # 10件に満たなければ操作を終える
-        except IndexError:
-            pass
+    # 検索したレシピのidを取得
+    recipeidlist = session['recipes']
 
-        return render_template("recipe-search.html", recipes=displaylist, pages=range(int(len(recipelist)/10)+1))
+    conn = sqlite3.connect('recipe.db')
+    c = conn.cursor()
+    # idからレシピの情報を検索するが、指定するidの数を可変にするため、formatで?を検索件数の数だけ置換している
+    c.execute("SELECT recipe_title, recipe_url, food_image_url, id FROM recipe WHERE id IN ({})".format(
+        ','.join('?'*len(recipeidlist))), tuple(recipeidlist))
+
+    recipelist = c.fetchall()
+    # 辞書型にしてhtmlに渡せるようにする
+    for i in range(len(recipeidlist)):
+        dic = {}
+        dic['recipe_title'] = recipelist[i][0]
+        dic['recipe_url'] = recipelist[i][1]
+        dic['food_image_url'] = recipelist[i][2]
+        dic['id'] = recipelist[i][3]
+        recipelist[i] = dic
+    displaylist = []
+
+    # ブックマークついているものをbookmark_RecipeIdsにいれる
+    rows = get_db().execute("SELECT recipe_id FROM bookmark WHERE user_id=?", [session['user_id'], ]).fetchall()
+    bookmark_RecipeIds = []
+
+    for row in rows:
+        if not row['recipe_id'] in bookmark_RecipeIds:
+            bookmark_RecipeIds.append(row['recipe_id'])
+
+
+    # そのページに表示する10件を取り出す
+    try:
+        for i in range((pagenum-1)*10, pagenum*10):
+            displaylist.append(recipelist[i])
+    # 10件に満たなければ操作を終える
+    except IndexError:
+        pass
+
+    return render_template("recipe-search.html", recipes=displaylist, pages=range(max(2, pagenum-3), min(int(len(recipelist)/10), pagenum+4)), now=pagenum, last=int(len(recipelist)/10), bookmark_RecipeIds=bookmark_RecipeIds)
+
 
 
 @app.route("/recipe-food", methods=['GET', 'POST'])
@@ -376,6 +391,35 @@ def foodlist():
         conn.close()
 
         return render_template("foodlist.html", result=result)
+
+@app.route("/<page>/<id>/bookmark", methods={"GET", "POST"})
+@login_required
+def bookmark(page, id):
+    get_db().execute("INSERT INTO bookmark (user_id, recipe_id) VALUES(?,?)",[session["user_id"], id,])
+
+    get_db().commit()
+
+    return redirect(f"/{page}/recipe-search")
+
+
+@app.route("/<page>/<id>/bookmark-release", methods={"GET", "POST"})
+@login_required
+def recipe_search_bookmark_release(page, id):
+    get_db().execute("DELETE FROM bookmark WHERE user_id=? AND recipe_id=?",[session["user_id"], id,])
+
+    get_db().commit()
+
+    return redirect(f"/{page}/recipe-search")
+
+
+@app.route("/<id>/bookmark-release", methods={"GET", "POST"})
+@login_required
+def bookmark_release(id):
+    get_db().execute("DELETE FROM bookmark WHERE user_id=? AND recipe_id=?",[session["user_id"], id,])
+
+    get_db().commit()
+
+    return redirect("/bookmarks")
 
 # database
 def connect_db():

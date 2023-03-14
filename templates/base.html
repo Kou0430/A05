@@ -51,6 +51,7 @@
           {% if session["user_id"] %}
           <li><a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a></li>
           <li><a href="{{ url_for('recipe_food') }}">レシピから買い物リスト</a></li>
+          <li><a href="{{ url_for('bookmarks') }}">レシピブックマーク</a></li>
           <li><a href="{{ url_for('logout') }}">ログアウト</a></li>
           {% else %}
           <li><a href="{{ url_for('login') }}">ログイン</a></li>
@@ -92,7 +93,7 @@
             {% if session["user_id"] %}
             <li><a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a></li>
             <li><a href="{{ url_for('recipe_food') }}">レシピから買い物リスト</a></li>
-            <li><a href="{{ url_for('bookmarks') }}">ブックマーク</a></li>
+            <li><a href="{{ url_for('bookmarks') }}">レシピブックマーク</a></li>
             <li><a href="{{ url_for('logout') }}">ログアウト</a></li>
             {% else %}
             <li><a href="{{ url_for('login') }}">ログイン</a></li>
