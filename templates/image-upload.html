@@ -4,9 +4,11 @@
 
 <div class="text-sm breadcrumbs mb-2">
   <ul>
-      <li>ホーム</li>
+    <li><a href="{{ url_for('index') }}">ホーム</a></li>
+    <li>画像から食材・レシピ検索</li>
   </ul>
 </div>
+
 <div class="flex justify-center">
   <form action="{{ url_for('image_search') }}" enctype="multipart/form-data" method="post">
     <input type="file" name="img" class="file-input file-input-bordered w-full max-w-xs" />

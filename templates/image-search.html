@@ -4,16 +4,20 @@
 
 <div class="text-sm breadcrumbs mb-2">
   <ul>
-      <li>ホーム</li>
+    <li><a href="{{ url_for('index') }}">ホーム</a></li>
+    <li><a href="{{ url_for('image_upload') }}">画像から食材・レシピ検索</a></li>
+    <li>検索結果</li>
   </ul>
 </div>
 
-<div class="flex w-full">
-  <img src="{{ img_path }}">
-</div>
+<p class="mt-4 mb-2">検索対象画像</p>
+<img
+class="object-cover rounded-lg h-72 w-full"
+  src="{{ img_path }}"
+/>
 
+<p class="mt-4">レシピ検索したいワードを5つまで選択して、検索ボタンを押してください。</p>
 <form action="/food-recipe" method="post">
-<p class="mt-2">レシピ検索したいワードを5つまで選択して、検索ボタンを押してください。</p>
 <table class="table w-full mt-4">
   <!-- head -->
   <thead>
@@ -39,7 +43,9 @@
           </div>
         </div>
       </td>
-      <td>{{ r.score }}</td>
+      <td>
+        {{ r.score }}<br>
+        <progress class="progress progress-info" value="{{ r.score }}" max="1"></progress></td>
     </tr>
     {% endfor %}
   </tbody>
