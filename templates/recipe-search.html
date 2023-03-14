@@ -1,55 +1,58 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="text-sm breadcrumbs">
+  <ul>
+    <li><a href="{{ url_for('index') }}">ホーム</a></li>
+    <li><a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a></li>
+    <li>検索結果</li>
+  </ul>
+</div>
+<div class="flex flex-wrap">
+  {% for recipe in recipes %}
+  <div class="card card-compact w-48 bg-base-100 shadow-xl m-2">
+    <figure class="h-36">
+      <img
+        class="object-contain"
+        src="{{ recipe.food_image_url }}"
+      />
+    </figure>
+    <div class="card-body">
+      <h2 class="card-title">{{ recipe.recipe_title }}</h2>
+      <div class="card-actions justify-end">
+        <a href="{{ recipe.recipe_url }}" role="button" class="btn btn-primary">詳細をみる</a>
+      </div>
+      {% if not recipe.id in bookmark_RecipeIds %}
+      <div class="card-actions justify-end">
+        <a href="/{{ now }}/{{ recipe.id }}/bookmark" role="button" class="btn btn-outline btn-success">ブックマークする</a>
+      </div>
+      {% else %}
+      <div class="card-actions justify-end">
+        <a href="/{{ now }}/{{ recipe.id }}/bookmark-release" role="button" class="btn btn-success">ブックマーク解除</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<div class="flex justify-center mt-4">
+  <div class="btn-group">
+    {% if now == 1 %}
+    <a href="/1/recipe-search" role="button" class="btn">1</a>
+    {% else %}
+    <a href="/1/recipe-search" role="button" class="btn btn-outline">1</a>
+    {% endif %}
+    {% for page in pages %}
+      {% if page == now %}
+      <a href="/{{ page }}/recipe-search" role="button" class="btn">{{ page }}</button></a>
+      {% else %}
+        <a href="/{{ page }}/recipe-search" role="button" class="btn btn-outline">{{ page }}</a>
+      {% endif %}
+    {% endfor %}
+    <!-- <a href="/{{ last }}/recipe-search"><button class="btn" value="{{ last }}">{{ last }}</button></a> -->
+    <a href="/{{ last }}/recipe-search" role="button" class="btn btn-outline">{{ last }}</a>
+  </div>
+</div>
 
-  <form action="{{ url_for('recipe_search') }}" method="post">
-    <div class="text-sm breadcrumbs">
-      <ul>
-        <li><a href="{{ url_for('index') }}">ホーム</a></li>
-        <li><a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a></li>
-        <li>検索結果</li>
-      </ul>
-    </div>
-    <div class="flex flex-wrap">
-      {% for recipe in recipes %}
-      <div class="card card-compact w-48 bg-base-100 shadow-xl m-2">
-        <figure class="h-36">
-          <img
-            class="object-contain"
-            src="{{ recipe.food_image_url }}"
-          />
-        </figure>
-        <div class="card-body">
-          <h2 class="card-title">{{ recipe.recipe_title }}</h2>
-          <div class="card-actions justify-end">
-            <button class="btn btn-primary"><a href="{{ recipe.recipe_url }}">詳細をみる</a></button>
-          </div>
-          {% if not recipe.id in bookmark_RecipeIds %}
-          <div class="card-actions justify-end">
-            <button class="btn btn-outline btn-success"><a href="/{{ recipe.id }}/bookmark">ブックマークする</a></button>
-          </div>
-          {% else %}
-          <div class="card-actions justify-end">
-            <button class="btn btn-success"><a href="/{{ recipe.id }}/bookmark-release">ブックマーク解除</a></button>
-          </div>
-          {% endif %}
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-    <div class="flex justify-center mt-4">
-      <div class="btn-group">
-        <button class="btn " name="pagenation" value="1">1</button>
-        {% for page in pages %}
-          {% if page == now %}
-            <button class="btn btn-active" type="submit" name="pagenation" value="{{ page }}">{{ page }}</button>
-          {% else %}
-            <button class="btn " name="pagenation" value="{{ page }}">{{ page }}</button>
-          {% endif %}
-        {% endfor %}
-        <button class="btn " name="pagenation" value="{{ last }}">{{ last }}</button>
-      </div>
-    </div>
-  </form>
 
 {% endblock %}
