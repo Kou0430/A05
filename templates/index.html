@@ -20,7 +20,7 @@
       place-items-center
       "
   >
-      <a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a>
+      <a href="{{ url_for('food_recipe') }}">材料からレシピ検索する</a>
 </div>
 <div class="divider divider-horizontal">OR</div>
   <div
@@ -37,8 +37,12 @@
       <a href="{{ url_for('recipe_food') }}">レシピから買い物リスト</a>
   </div>
 </div>
-<div class="divider"></div>
+<div class="divider">OR</div>
 <div class="grid h-32 card bg-accent rounded-box place-items-center">
+  <a href="{{ url_for('image_upload') }}">画像から食材・レシピ検索</a>
+</div>
+<div class="divider"></div>
+<div class="grid h-32 card bg-neutral text-neutral-content rounded-box place-items-center">
   <a href="{{ url_for('bookmarks') }}">ブックマークを見る</a>
 </div>
 

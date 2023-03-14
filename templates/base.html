@@ -47,12 +47,11 @@
             >Madam's Kitchen</a
           >
         </div>
-        <ul class="hidden sm:inline-flex menu menu-horizontal px-1">
+        <ul class="hidden md:inline-flex menu menu-horizontal px-1">
           {% if session["user_id"] %}
           <li><a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a></li>
           <li><a href="{{ url_for('recipe_food') }}">レシピから買い物リスト</a></li>
-          <li><a href="{{ url_for('bookmarks') }}">レシピブックマーク</a></li>
-          <li><a href="{{ url_for('logout') }}">ログアウト</a></li>
+          <li><a href="{{ url_for('image_upload') }}">画像から検索</a></li>
           {% else %}
           <li><a href="{{ url_for('login') }}">ログイン</a></li>
           <li><a href="{{ url_for('register') }}">新規ユーザー登録</a></li>
@@ -60,21 +59,26 @@
         </ul>
 
         <div class="flex-none">
-          <button class="btn btn-square btn-ghost">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              class="inline-block w-5 h-5 stroke-current"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-              ></path>
-            </svg>
-          </button>
+          <div class="dropdown dropdown-end">
+            <button class="btn btn-square btn-ghost">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                class="inline-block w-5 h-5 stroke-current"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                ></path>
+              </svg>
+            </button>
+            <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+              <li><a href="{{ url_for('logout') }}">ログアウト</a></li>
+            </ul>
+          </div>
         </div>
       </div>
       <!-- 共通部分（ナビゲーションバー） ここまで -->
@@ -93,6 +97,7 @@
             {% if session["user_id"] %}
             <li><a href="{{ url_for('food_recipe') }}">材料からレシピ検索</a></li>
             <li><a href="{{ url_for('recipe_food') }}">レシピから買い物リスト</a></li>
+            <li><a href="{{ url_for('image_upload') }}">画像から食材・レシピ検索</a></li>
             <li><a href="{{ url_for('bookmarks') }}">レシピブックマーク</a></li>
             <li><a href="{{ url_for('logout') }}">ログアウト</a></li>
             {% else %}

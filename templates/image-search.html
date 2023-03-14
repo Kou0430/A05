@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="text-sm breadcrumbs mb-2">
+  <ul>
+    <li><a href="{{ url_for('index') }}">ホーム</a></li>
+    <li><a href="{{ url_for('image_upload') }}">画像から食材・レシピ検索</a></li>
+    <li>検索結果</li>
+  </ul>
+</div>
+
+<p class="mt-4 mb-2">検索対象画像</p>
+<img
+class="object-cover rounded-lg h-72 w-full"
+  src="{{ img_path }}"
+/>
+
+<p class="mt-4">レシピ検索したいワードを5つまで選択して、検索ボタンを押してください。</p>
+<form action="/food-recipe" method="post">
+<table class="table w-full mt-4">
+  <!-- head -->
+  <thead>
+    <tr>
+      <th>選択</th>
+      <th>食材名</th>
+      <th>一致度</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- row 1 -->
+    {% for r in result %}
+    <tr>
+      <th>
+        <label>
+          <input type="checkbox" class="checkbox" name="foods" id="checkbox{{ loop.index }}"value="{{ r.description }}"/>
+        </label>
+      </th>
+      <td>
+        <div class="flex items-center space-x-3">
+          <div>
+            <div class="font-bold"><label for="checkbox{{ loop.index }}">{{ r.description }}</label></div>
+          </div>
+        </div>
+      </td>
+      <td>
+        {{ r.score }}<br>
+        <progress class="progress progress-info" value="{{ r.score }}" max="1"></progress></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <!-- foot -->
+  <tfoot>
+    <tr>
+      <th>選択</th>
+      <th>食材名</th>
+      <th>個数・量</th>
+    </tr>
+  </tfoot>
+</table>
+  <button class="btn mt-4 mb-12 flex content-center">
+    <span class="text-lg pr-1">レシピ検索</span>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+      />
+    </svg>
+  </button>
+</form>
+
+{% endblock %}

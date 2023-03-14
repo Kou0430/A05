@@ -24,11 +24,11 @@
       </div>
       {% if not recipe.id in bookmark_RecipeIds %}
       <div class="card-actions justify-end">
-        <a href="/{{ now }}/{{ recipe.id }}/bookmark" role="button" class="btn btn-outline btn-success">ブックマークする</a>
+        <a href="/{{ now }}/{{ recipe.id }}/bookmark" role="button" class="btn btn-success">ブックマーク</a>
       </div>
       {% else %}
       <div class="card-actions justify-end">
-        <a href="/{{ now }}/{{ recipe.id }}/bookmark-release" role="button" class="btn btn-success">ブックマーク解除</a>
+        <a href="/{{ now }}/{{ recipe.id }}/bookmark-release" role="button" class="btn btn-error">ブックマーク解除</a>
       </div>
       {% endif %}
     </div>
@@ -38,21 +38,20 @@
 <div class="flex justify-center mt-4">
   <div class="btn-group">
     {% if now == 1 %}
-    <a href="/1/recipe-search" role="button" class="btn">1</a>
+    <a href="/1/recipe-search" role="button" class="btn btn-active">1</a>
     {% else %}
-    <a href="/1/recipe-search" role="button" class="btn btn-outline">1</a>
+    <a href="/1/recipe-search" role="button" class="btn">1</a>
     {% endif %}
     {% for page in pages %}
       {% if page == now %}
-      <a href="/{{ page }}/recipe-search" role="button" class="btn">{{ page }}</button></a>
+      <a href="/{{ page }}/recipe-search" role="button" class="btn btn-active">{{ page }}</button></a>
       {% else %}
-        <a href="/{{ page }}/recipe-search" role="button" class="btn btn-outline">{{ page }}</a>
+        <a href="/{{ page }}/recipe-search" role="button" class="btn">{{ page }}</a>
       {% endif %}
     {% endfor %}
     <!-- <a href="/{{ last }}/recipe-search"><button class="btn" value="{{ last }}">{{ last }}</button></a> -->
-    <a href="/{{ last }}/recipe-search" role="button" class="btn btn-outline">{{ last }}</a>
+    <a href="/{{ last }}/recipe-search" role="button" class="btn">{{ last }}</a>
   </div>
 </div>
-
 
 {% endblock %}
